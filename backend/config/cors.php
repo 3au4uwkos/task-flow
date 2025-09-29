@@ -19,6 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
+    // TODO реализовать чтение из .env
     'allowed_origins' => ['*'],
 
     'allowed_origins_patterns' => [],
