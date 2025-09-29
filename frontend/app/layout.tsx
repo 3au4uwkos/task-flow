@@ -1,30 +1,33 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Orbitron } from "next/font/google"
-import { JetBrains_Mono } from "next/font/google"
-import { Comfortaa } from "next/font/google"
+import { Inter } from "next/font/google"
+import { Roboto_Mono } from "next/font/google"
+import { Nunito } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
 import { AuthProvider } from "@/lib/auth"
 import { ThemeProvider } from "@/lib/theme"
 import "./globals.css"
 
-const orbitron = Orbitron({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-orbitron",
+  variable: "--font-inter",
   display: "swap",
+  fallback: ["system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
 })
 
-const jetbrainsMono = JetBrains_Mono({
+const robotoMono = Roboto_Mono({
   subsets: ["latin"],
-  variable: "--font-jetbrains",
+  variable: "--font-roboto-mono",
   display: "swap",
+  fallback: ["Consolas", "Monaco", "Courier New", "monospace"],
 })
 
-const comfortaa = Comfortaa({
+const nunito = Nunito({
   subsets: ["latin"],
-  variable: "--font-comfortaa",
+  variable: "--font-nunito",
   display: "swap",
+  fallback: ["system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
 })
 
 export const metadata: Metadata = {
@@ -34,20 +37,20 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({
-  children,
-}: Readonly<{
+                                     children,
+                                   }: Readonly<{
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className={`font-sans ${orbitron.variable} ${jetbrainsMono.variable} ${comfortaa.variable} antialiased`}>
-        <ThemeProvider>
-          <AuthProvider>
-            <Suspense fallback={null}>{children}</Suspense>
-          </AuthProvider>
-        </ThemeProvider>
-        <Analytics />
+      <html lang="en" className="dark">
+      <body className={`font-sans ${inter.variable} ${robotoMono.variable} ${nunito.variable} antialiased`}>
+      <ThemeProvider>
+        <AuthProvider>
+          <Suspense fallback={null}>{children}</Suspense>
+        </AuthProvider>
+      </ThemeProvider>
+      <Analytics />
       </body>
-    </html>
+      </html>
   )
 }

@@ -113,10 +113,10 @@
 }
 
 @theme inline {
-  /* Updated font variables for different themes */
-  --font-sans: var(--font-orbitron);
-  --font-mono: var(--font-jetbrains);
-  --font-display: var(--font-comfortaa);
+  /* Fixed font variable references to match layout.tsx definitions */
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-roboto-mono);
+  --font-display: var(--font-nunito);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -157,18 +157,18 @@
 
 /* Theme-specific font overrides */
 .pink {
-  --font-sans: var(--font-comfortaa);
-  --font-mono: var(--font-comfortaa);
+  --font-sans: var(--font-nunito);
+  --font-display: var(--font-nunito);
 }
 
 .dark {
-  --font-sans: var(--font-orbitron);
-  --font-mono: var(--font-jetbrains);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-roboto-mono);
 }
 
 .light {
-  --font-sans: var(--font-orbitron);
-  --font-mono: var(--font-jetbrains);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-roboto-mono);
 }
 
 @layer base {
@@ -183,19 +183,19 @@
 /* Grid pattern background */
 .grid-pattern {
   background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
   background-size: 50px 50px;
 }
 
 .grid-pattern-light {
   background-image: linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+  linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
   background-size: 50px 50px;
 }
 
 /* Updated pink theme grid pattern to burgundy */
 .grid-pattern-pink {
   background-image: linear-gradient(rgba(139, 69, 19, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(139, 69, 19, 0.08) 1px, transparent 1px);
+  linear-gradient(90deg, rgba(139, 69, 19, 0.08) 1px, transparent 1px);
   background-size: 50px 50px;
 }
