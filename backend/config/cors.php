@@ -15,12 +15,17 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    'paths' => ['api/*', 'sanctum/csrf-cookie', 'login', 'logout', 'register'],
 
     'allowed_methods' => ['*'],
 
-    // TODO реализовать чтение из .env
-    'allowed_origins' => ['*'],
+    'allowed_origins' => explode(
+        ',',
+        env(
+            'CORS_ALLOWED_ORIGINS',
+            'http://localhost:3000,http://localhost:3001'
+        )
+    ),
 
     'allowed_origins_patterns' => [],
 

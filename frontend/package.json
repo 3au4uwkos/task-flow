@@ -6,7 +6,9 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "export": "next build && rm -rf ../backend/public/app && mv out ../backend/public/app",
+    "deploy": "npm run export"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -59,7 +61,8 @@
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.9",
-    "zod": "3.25.67"
+    "zod": "3.25.67",
+    "axios": "^1.6.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.9",
