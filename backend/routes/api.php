@@ -24,7 +24,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/check-auth', [AuthController::class, 'checkAuth']);
 
     // Workspaces
-    Route::apiResource('workspaces', WorkspaceController::class);
+    Route::apiResource('workspaces', WorkSpaceController::class);
 
     // Columns
     Route::apiResource('columns', ColumnController::class)->except(['index', 'show']);
