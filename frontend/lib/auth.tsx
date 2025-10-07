@@ -1,21 +1,23 @@
 "use client"
 
 import type React from "react"
-
 import { createContext, useContext, useEffect, useState } from "react"
+import { authAPI } from "./api"
 
 interface User {
   id: string
   email: string
   name: string
+  avatar?: string
 }
 
 interface AuthContextType {
   user: User | null
-  login: (email: string, password: string) => Promise<boolean>
-  register: (email: string, password: string, name: string) => Promise<boolean>
-  logout: () => void
+  login: (email: string, password: string) => Promise<{ success: boolean; message?: string }>
+  register: (name: string, email: string, password: string, passwordConfirmation: string) => Promise<{ success: boolean; message?: string }>
+  logout: () => Promise<void>
   isLoading: boolean
+  checkAuth: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -24,67 +26,92 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
-    // Check for existing session on mount
-    const savedUser = localStorage.getItem("user")
-    if (savedUser) {
-      setUser(JSON.parse(savedUser))
+  const checkAuth = async () => {
+    try {
+      const token = localStorage.getItem('auth_token')
+      if (token) {
+        const response = await authAPI.checkAuth()
+        setUser(response.user)
+      }
+    } catch (error) {
+      console.error('Auth check failed:', error)
+      localStorage.removeItem('auth_token')
+      localStorage.removeItem('user')
+      setUser(null)
+    } finally {
+      setIsLoading(false)
     }
-    setIsLoading(false)
+  }
+
+  useEffect(() => {
+    checkAuth()
   }, [])
 
-  const login = async (email: string, password: string): Promise<boolean> => {
-    setIsLoading(true)
+  const login = async (email: string, password: string): Promise<{ success: boolean; message?: string }> => {
+    try {
+      setIsLoading(true)
+      const response = await authAPI.login({ email, password })
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+      setUser(response.user)
+      localStorage.setItem('auth_token', response.token)
+      localStorage.setItem('user', JSON.stringify(response.user))
 
-    // Simple validation for demo purposes
-    if (email && password.length >= 6) {
-      const user = {
-        id: "1",
-        email,
-        name: email.split("@")[0],
-      }
-      setUser(user)
-      localStorage.setItem("user", JSON.stringify(user))
+      return { success: true }
+    } catch (error: any) {
+      const message = error.response?.data?.message || 'Login failed'
+      return { success: false, message }
+    } finally {
       setIsLoading(false)
-      return true
     }
-
-    setIsLoading(false)
-    return false
   }
 
-  const register = async (email: string, password: string, name: string): Promise<boolean> => {
-    setIsLoading(true)
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-
-    // Simple validation for demo purposes
-    if (email && password.length >= 6 && name) {
-      const user = {
-        id: "1",
-        email,
+  const register = async (name: string, email: string, password: string, passwordConfirmation: string): Promise<{ success: boolean; message?: string }> => {
+    try {
+      setIsLoading(true)
+      const response = await authAPI.register({
         name,
-      }
-      setUser(user)
-      localStorage.setItem("user", JSON.stringify(user))
+        email,
+        password,
+        password_confirmation: passwordConfirmation
+      })
+
+      setUser(response.user)
+      localStorage.setItem('auth_token', response.token)
+      localStorage.setItem('user', JSON.stringify(response.user))
+
+      return { success: true }
+    } catch (error: any) {
+      const message = error.response?.data?.message || 'Registration failed'
+      return { success: false, message }
+    } finally {
       setIsLoading(false)
-      return true
     }
-
-    setIsLoading(false)
-    return false
   }
 
-  const logout = () => {
-    setUser(null)
-    localStorage.removeItem("user")
+  const logout = async () => {
+    try {
+      await authAPI.logout()
+    } catch (error) {
+      console.error('Logout error:', error)
+    } finally {
+      setUser(null)
+      localStorage.removeItem('auth_token')
+      localStorage.removeItem('user')
+    }
   }
 
-  return <AuthContext.Provider value={{ user, login, register, logout, isLoading }}>{children}</AuthContext.Provider>
+  return (
+      <AuthContext.Provider value={{
+        user,
+        login,
+        register,
+        logout,
+        isLoading,
+        checkAuth
+      }}>
+        {children}
+      </AuthContext.Provider>
+  )
 }
 
 export function useAuth() {

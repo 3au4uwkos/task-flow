@@ -48,7 +48,7 @@ export function AuthForm() {
     const password = formData.get("password") as string
     const name = formData.get("name") as string
 
-    const success = await register(email, password, name)
+    const success = await register(name, email, password)
 
     if (success) {
       router.push("/kanban")
