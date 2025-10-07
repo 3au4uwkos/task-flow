@@ -9,7 +9,7 @@ export const api = axios.create({
         'Accept': 'application/json',
         'X-Requested-With': 'XMLHttpRequest',
     },
-    withCredentials: true, // Важно для Sanctum!
+    withCredentials: true,
 })
 
 // Interceptor для установки CSRF cookie перед запросами
@@ -87,4 +87,13 @@ export const authAPI = {
         const response = await api.get('/check-auth')
         return response.data
     },
+}
+
+export const workSpaceAPI = {
+    getAllWorkSpaces: async () => {
+        return await api.get('/workspaces');
+    },
+    getWorkSpace: async () => {
+        return await api.get('/workspace')
+    }
 }

@@ -121,10 +121,10 @@ class WorkSpaceService extends AbstractService
             return true;
         }
 
-        // Для публичных workspace любой пользователь имеет доступ
-        if ($workspace->accessType->name === 'public') {
-            return true;
-        }
+//        // Для публичных workspace любой пользователь имеет доступ
+//        if ($workspace->accessType->name === 'public') {
+//            return true;
+//        }
 
         return false;
     }

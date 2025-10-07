@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Auth\User;
+use App\Models\Core\AccessType;
+use App\Services\WorkSpaceService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
@@ -12,6 +14,14 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+
+    private WorkSpaceService $workSpaceService;
+
+    public function __construct(WorkSpaceService $workSpaceService)
+    {
+        $this->workSpaceService = $workSpaceService;
+    }
+
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -34,6 +44,17 @@ class AuthController extends Controller
 
         // Создаем токен Sanctum
         $token = $user->createToken('auth_token')->plainTextToken;
+
+
+        $data = [
+            'name' => $user->name,
+            'description' => "Private Kanban table of " . $user->name,
+            'author_id' => $user->id,
+            'access_type_id' => AccessType::PRIVATE->getId(),
+        ];
+
+        // Создаем workspace с дефолтными колонками
+        $this->workSpaceService->createWithDefaultColumns($data);
 
         return response()->json([
             'user' => [

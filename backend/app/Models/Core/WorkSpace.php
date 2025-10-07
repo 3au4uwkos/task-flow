@@ -24,11 +24,6 @@ class WorkSpace extends Model
         return $this->belongsTo(User::class, 'author_id');
     }
 
-    public function accessType(): BelongsTo
-    {
-        return $this->belongsTo(AccessType::class);
-    }
-
     public function columns(): HasMany
     {
         return $this->hasMany(Column::class);
